@@ -1,0 +1,19 @@
+@import 'variables';
+
+.calendar-input {
+    width: $calendar-input-width;
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    .icon {
+        font-size: $icon-font-size;
+        padding: $icon-padding;
+        cursor: pointer;
+    }
+    input {
+        padding: 5px; 
+        border: none;
+        &:focus {
+            outline: none;
+        }
+    }
+}

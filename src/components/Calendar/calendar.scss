@@ -1,0 +1,70 @@
+@import 'variables';
+
+.calendar {
+    position: absolute;
+    width: $calendar-width;
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    padding: 15px 5px;
+    .icon {
+        font-size: $icon-font-size;
+        padding: $icon-padding;
+        cursor: pointer;
+    }
+    .mode-btn {
+        width: 100%;
+        font-weight: bold;
+        &:hover {
+            background-color: $outside-color;
+        }
+    }
+    .control {
+        display: flex;
+        justify-content: space-between;
+    }
+    .calendar-body {
+        display: flex;
+        width: 100%;
+        flex-wrap: wrap;
+        .year-item,
+        .month-item {
+            width: $over-4-col-width;
+            height: $over-4-col-width;
+            line-height: $over-4-col-width;
+        }
+        .day-item {
+            width: $over-7-col-width;
+            height: $over-7-col-width;
+            line-height: $over-7-col-width;
+            &.hdr {
+                font-weight: bold;
+            }
+            &.holiday,
+            &.today {
+                color: $selected-color
+            }
+        }
+        .item {
+            cursor: pointer;
+            border-radius: 50%;
+            &.outside {
+                color: $outside-color;
+            }
+            &:hover {
+                background-color: $border-color;
+                font-weight: bold;
+            }
+        }
+        .item.selected {
+            color: #FFFFFF;
+            background-color: $selected-color;
+            font-weight: bold;
+            &.outside {
+                color: $outside-color;
+            }
+            &:hover {
+                opacity: 0.8;
+            }
+        }
+    }
+}
