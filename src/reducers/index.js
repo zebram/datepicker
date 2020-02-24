@@ -10,7 +10,7 @@ export default function(state = initialState, action) {
     switch(action.type) {
         case UPDATE_DATE:
             return Object.assign({}, state, {
-                date: action.data.date
+                date: moment(action.data.date).format(DATE_FMT)
             })
         default:
             return state;

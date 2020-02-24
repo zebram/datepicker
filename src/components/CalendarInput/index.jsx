@@ -15,9 +15,6 @@ class CalendarInput extends React.Component {
     }
     handleSelect = value => {
         const { updateDate } = this.props; 
-        this.setState({
-            open: false,
-        });
         updateDate(value);
     }
     render() {

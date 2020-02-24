@@ -1,5 +1,5 @@
 import React from 'react';
-import { MODE, MONTH, WEEKDAY } from './constants';
+import { MODE, MONTH, WEEKDAY, DATE_FMT } from './constants';
 import FontAwesome from 'react-fontawesome';
 import moment from 'moment';
 import classNames from 'classnames';
@@ -8,38 +8,66 @@ import './calendar.scss';
 class Calendar extends React.Component {
     state = {
         mode: MODE.DAY,
-        date: moment(),
+        selectedDate: moment().format(DATE_FMT),
+        date: moment().format(DATE_FMT),
     }
-    constructor(props) {
-        super(props);
+    static getDerivedStateFromProps(props, state) {
         const { value } = props;
-        this.state.date = moment(value);
+        const { selectedDate } = state;
+        if( value && value !== selectedDate ) {
+            return Object.assign({}, state, {
+                selectedDate: value,
+                date: value,
+            });
+        }
+        else {
+            return null
+        }
     }
     handlePrevClick = se => {
         const { mode, date } = this.state;
-        let prevDate;
-        mode === MODE.DAY && (prevDate = date.subtract(1, 'month'));
-        mode === MODE.MONTH && (prevDate = date.subtract(1, 'year'));
-        mode === MODE.YEAR && (prevDate = date.subtract(10, 'year'));
+        const mmt = moment(date, DATE_FMT);
+        let prevMmt;
+        mode === MODE.DAY && (prevMmt = mmt.subtract(1, 'month'));
+        mode === MODE.MONTH && (prevMmt = mmt.subtract(1, 'year'));
+        mode === MODE.YEAR && (prevMmt = mmt.subtract(10, 'year'));
         this.setState({
-            date: prevDate
+            date: prevMmt.format(DATE_FMT),
         });
     }
     handleNextClick = se => {
         const { mode, date } = this.state;
-        let nextDate;
-        mode === MODE.DAY && (nextDate = date.add(1, 'month'));
-        mode === MODE.MONTH && (nextDate = date.add(1, 'year'));
-        mode === MODE.YEAR && (nextDate = date.add(10, 'year'));
+        const mmt = moment(date, DATE_FMT);
+        let nextMmt;
+        mode === MODE.DAY && (nextMmt = mmt.add(1, 'month'));
+        mode === MODE.MONTH && (nextMmt = mmt.add(1, 'year'));
+        mode === MODE.YEAR && (nextMmt = mmt.add(10, 'year'));
         this.setState({
-            date: nextDate
+            date: nextMmt.format(DATE_FMT),
         });
     }
-    handleModeChange = () => {
+    handleModeChange = nextMode => {
         const { mode } = this.state;
+        nextMode === undefined && (nextMode = (mode + 1) % 3);
         this.setState({
-            mode: (mode + 1) % 3
+            mode: nextMode
         })
+    }
+    handleItemClick = value => {
+        const { onSelect } = this.props;
+        const { mode } = this.state;
+        switch(mode) {
+            case MODE.YEAR:
+                this.handleModeChange(MODE.MONTH);
+            break;
+            case MODE.MONTH:
+                this.handleModeChange(MODE.DAY);
+            break;
+            case MODE.DAY:
+            break;
+            default:
+        }
+        onSelect(value);
     }
     getDaysOfMonth = (month, isLeapYear) => {
         let days = 31;
@@ -68,7 +96,7 @@ class Calendar extends React.Component {
                 />
                 <span 
                     className="icon mode-btn"
-                    onClick={ this.handleModeChange }
+                    onClick={ () => this.handleModeChange() }
                 >
                     { title }
                 </span>
@@ -80,8 +108,9 @@ class Calendar extends React.Component {
             </div>
         )
     }
-    renderYearFace = mmt => {
-        const { value, onSelect } = this.props;
+    renderYearFace = date => {
+        const mmt = moment(date, DATE_FMT);
+        const { value } = this.props;
         const selectedDate = moment(value);
         const year = mmt.get('year');
         var yearFace = [];
@@ -100,7 +129,7 @@ class Calendar extends React.Component {
                 <div 
                     key={ `year-${year}` }
                     className={ style }
-                    onClick={ () => onSelect(value) }
+                    onClick={ () => this.handleItemClick(value) }
                 >
                     { year }
                 </div>
@@ -116,8 +145,9 @@ class Calendar extends React.Component {
             </>
         )
     }
-    renderMonthFace = mmt => {
-        const { value, onSelect } = this.props;
+    renderMonthFace = date => {
+        const mmt = moment(date, DATE_FMT);
+        const { value } = this.props;
         const selectedDate = moment(value);
         const title = mmt.format('YYYY');
         return (
@@ -137,7 +167,7 @@ class Calendar extends React.Component {
                                     <div 
                                         key={ `month-${month}` }
                                         className={ style }
-                                        onClick={ () => onSelect(value) }
+                                        onClick={ () => this.handleItemClick(value) }
                                     >
                                         { month }
                                     </div>
@@ -149,9 +179,10 @@ class Calendar extends React.Component {
             </>
         )
     }
-    renderDayFace = mmt => {
+    renderDayFace = date => {
+        const mmt = moment(date, DATE_FMT);
         var dayFace = [];
-        const { value, onSelect } = this.props;
+        const { value } = this.props;
         const selectedDate = moment(value);
         const title = mmt.format('MMM YYYY');
         const aMonthBeforeMmt = mmt.clone().subtract(1, 'month');
@@ -187,7 +218,7 @@ class Calendar extends React.Component {
                 <div 
                     key={ `prev-month-${date}` } 
                     className={ prevMonthStyle }
-                    onClick={ () => onSelect(value) }
+                    onClick={ () => this.handleItemClick(value) }
                 >
                     { date }
                 </div>
@@ -208,7 +239,7 @@ class Calendar extends React.Component {
                 <div 
                     key={ `curr-month-${date}` } 
                     className={ style }
-                    onClick={ () => onSelect(value) }
+                    onClick={ () => this.handleItemClick(value) }
                 >
                     { date }
                 </div>
@@ -230,7 +261,7 @@ class Calendar extends React.Component {
                 <div 
                     key={ `next-month-${date}` } 
                     className={ nextMonthStyle }
-                    onClick={ () => onSelect(value) }
+                    onClick={ () => this.handleItemClick(value) }
                 >
                     { date }
                 </div>
