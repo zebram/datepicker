@@ -7,7 +7,6 @@ class Calendar extends React.Component {
         open: false,
         date: "1982-10-02",
     };
-
     handleIconClick = se => {
         const { open } = this.state;
         this.setState({ open: !open });
@@ -23,12 +22,17 @@ class Calendar extends React.Component {
         return (
             <div className="calendar-wrap">
                 <CalendarInput
-                    value = { date }
-                    onIconClick = { this.handleIconClick }
-                    onSelect = { this.handleSelect }
+                    value={ date }
+                    onIconClick={ this.handleIconClick }
+                    onSelect={ this.handleSelect }
                 />
                 { 
-                    open && <CalendarBody value = { date }/> 
+                    open && (
+                        <CalendarBody 
+                            value = { date }
+                            onSelect = { this.handleSelect }
+                        />
+                    ) 
                 }
             </div>
         )

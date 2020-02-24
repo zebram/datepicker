@@ -3,11 +3,30 @@ import { DATE_FMT } from './constants';
 import FontAwesome from 'react-fontawesome';
 import './calendar-input.scss';
 
-function CalendarInput(props) {
-    const { value, onIconClick, onSelect } = props;
+class CalendarInput extends React.Component {
+    state = {
+        selectedDate: null,
+        date: null,
+    }
+    static getDerivedStateFromProps(props, state) {
+        const { value } = props;
+        const { selectedDate } = state;
+        let newState = null;
+        if( value !== selectedDate ) {
+            newState =  {
+                selectedDate: value,
+                date: value,
+            }
+        }
+        return newState;
 
-    function handleChange(se){
+    }
+    handleChange = se => {
+        const { onSelect } = this.props;
         const input = se.target;
+        this.setState({
+            date: input.value,
+        });
         if (input.checkValidity()) {
             onSelect(input.value);
         }
@@ -15,24 +34,28 @@ function CalendarInput(props) {
             input.reportValidity();
         }
     }
-
-    return (
-        <div className="calendar-input">
-            <FontAwesome 
-                className="icon" 
-                name="calendar"
-                onClick={ onIconClick }
-            /> 
-            <input 
-                type="text" 
-                placeholder={ DATE_FMT }
-                defaultValue={ value }
-                pattern="\d{4}-\d{2}-\d{2}"
-                title={ DATE_FMT }
-                onChange={ handleChange }
-            />
-        </div>
-    );
+    render() {
+        const { date } = this.state;
+        const { onIconClick } = this.props;
+        return (
+            <div className="calendar-input">
+                <FontAwesome 
+                    className="icon" 
+                    name="calendar"
+                    onClick={ onIconClick }
+                /> 
+                <input 
+                    type="text" 
+                    placeholder={ DATE_FMT }
+                    value={ date }
+                    pattern="\d{4}-\d{2}-\d{2}"
+                    title={ DATE_FMT }
+                    onChange={ this.handleChange }
+                    
+                />
+            </div>
+        );
+    }
 }
 
 export default CalendarInput;

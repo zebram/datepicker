@@ -81,7 +81,7 @@ class Calendar extends React.Component {
         )
     }
     renderYearFace = mmt => {
-        const { value } = this.props;
+        const { value, onSelect } = this.props;
         const selectedDate = moment(value);
         const year = mmt.get('year');
         var yearFace = [];
@@ -95,7 +95,16 @@ class Calendar extends React.Component {
                 "outside": year === min || year === max,
                 "selected": selectedDate.get('year') === year,
             });
-            yearFace.push(<div className={ style }>{ year }</div>)
+            let value = `${year}-${mmt.format('MM-DD')}`;
+            yearFace.push(
+                <div 
+                    key={ `year-${year}` }
+                    className={ style }
+                    onClick={ () => onSelect(value) }
+                >
+                    { year }
+                </div>
+            )
         }
 
         return (
@@ -108,7 +117,7 @@ class Calendar extends React.Component {
         )
     }
     renderMonthFace = mmt => {
-        const { value } = this.props;
+        const { value, onSelect } = this.props;
         const selectedDate = moment(value);
         const title = mmt.format('YYYY');
         return (
@@ -123,7 +132,16 @@ class Calendar extends React.Component {
                                     "month-item": true,
                                     "selected": selectedDate.get('year') === mmt.get('year') && selectedDate.get('month') === MONTH[month],
                                 });
-                                return <div className={ style }>{ month }</div>
+                                let value = `${mmt.get('year')}-${MONTH[month] + 1}-${mmt.get('date')}`;
+                                return (
+                                    <div 
+                                        key={ `month-${month}` }
+                                        className={ style }
+                                        onClick={ () => onSelect(value) }
+                                    >
+                                        { month }
+                                    </div>
+                                )
                             }
                         )
                     }
@@ -133,7 +151,7 @@ class Calendar extends React.Component {
     }
     renderDayFace = mmt => {
         var dayFace = [];
-        const { value } = this.props;
+        const { value, onSelect } = this.props;
         const selectedDate = moment(value);
         const title = mmt.format('MMM YYYY');
         const aMonthBeforeMmt = mmt.clone().subtract(1, 'month');
@@ -164,8 +182,15 @@ class Calendar extends React.Component {
                 "outside": true,
                 "selected": selectedDate.format('YYYY-MM') === aMonthBeforeMmt.format('YYYY-MM') && selectedDate.get('date') === date,
             });
+            let value = `${aMonthBeforeMmt.format('YYYY-MM')}-${date}`;
             dayFace.push(
-                <div key={ `prev-month-${date}` } className={ prevMonthStyle }>{ date }</div>
+                <div 
+                    key={ `prev-month-${date}` } 
+                    className={ prevMonthStyle }
+                    onClick={ () => onSelect(value) }
+                >
+                    { date }
+                </div>
             )
         }
 
@@ -178,8 +203,15 @@ class Calendar extends React.Component {
                 "today": today.format('YYYY-MM') === mmt.format('YYYY-MM') && today.get('date') === date,
                 "selected": selectedDate.format('YYYY-MM') === mmt.format('YYYY-MM') && selectedDate.get('date') === date,
             });
+            let value = `${mmt.format('YYYY-MM')}-${date}`;
             dayFace.push(
-                <div key={ date } className={ style }>{ date }</div>
+                <div 
+                    key={ `curr-month-${date}` } 
+                    className={ style }
+                    onClick={ () => onSelect(value) }
+                >
+                    { date }
+                </div>
             )
         }
 
@@ -193,8 +225,15 @@ class Calendar extends React.Component {
                 "outside": true,
                 "selected": selectedDate.format('YYYY-MM') === aMonthAftMmt.format('YYYY-MM') && selectedDate.get('date') === date,
             });
+            let value = `${aMonthAftMmt.format('YYYY-MM')}-${date}`;
             dayFace.push(
-                <div key={ `next-month-${date}` } className={ nextMonthStyle }>{ date }</div>
+                <div 
+                    key={ `next-month-${date}` } 
+                    className={ nextMonthStyle }
+                    onClick={ () => onSelect(value) }
+                >
+                    { date }
+                </div>
             )
         }
 
