@@ -1,6 +1,7 @@
 import React from 'react';
 import { DATE_FMT } from './constants';
 import FontAwesome from 'react-fontawesome';
+import moment from 'moment';
 import './calendar-input.scss';
 
 class CalendarInput extends React.Component {
@@ -28,9 +29,16 @@ class CalendarInput extends React.Component {
             date: input.value,
         });
         if (input.checkValidity()) {
-            onSelect(input.value);
+            if(moment(input.value).isValid()) {
+                onSelect(input.value);
+            }
+            else {
+                input.setCustomValidity("Invalid Date");
+                input.reportValidity();
+            }
         }
         else {
+            input.setCustomValidity("");
             input.reportValidity();
         }
     }
