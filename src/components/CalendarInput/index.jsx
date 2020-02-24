@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { updateDate } from '../../actions';
 import Input from './Input';
 import Calendar from './Calendar';
+import './calendar-input.scss';
 
 class CalendarInput extends React.Component {
     state = {
@@ -31,10 +32,16 @@ class CalendarInput extends React.Component {
                 />
                 { 
                     open && (
-                        <Calendar 
-                            value = { date }
-                            onSelect = { this.handleSelect }
-                        />
+                        <>
+                            <div 
+                                className="modal-screen"
+                                onClick={ () => this.setState({ open: false })}
+                            ></div>
+                            <Calendar 
+                                value = { date }
+                                onSelect = { this.handleSelect }
+                            />
+                        </>
                     ) 
                 }
             </div>

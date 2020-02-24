@@ -15,8 +15,8 @@ class Input extends React.Component {
         let newState = null;
         if( value !== selectedDate ) {
             newState =  {
-                selectedDate: value,
-                date: value,
+                selectedDate: moment(value).format(DATE_FMT),
+                date: moment(value).format(DATE_FMT),
             }
         }
         return newState;

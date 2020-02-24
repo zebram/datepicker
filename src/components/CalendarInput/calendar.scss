@@ -2,6 +2,7 @@
 
 .calendar {
     position: absolute;
+    z-index: 99;
     width: $calendar-width;
     border: 1px solid $border-color;
     border-radius: $border-radius;
