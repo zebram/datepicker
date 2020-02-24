@@ -1,6 +1,6 @@
 import { UPDATE_DATE } from '../actions';
 import moment from 'moment';
-import { DATE_FMT } from '../components/Calendar/constants';
+import { DATE_FMT } from '../components/CalendarInput/constants';
 
 const initialState = {
     date: moment().format(DATE_FMT),

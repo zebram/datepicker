@@ -2,9 +2,9 @@ import React from 'react';
 import { DATE_FMT } from './constants';
 import FontAwesome from 'react-fontawesome';
 import moment from 'moment';
-import './calendar-input.scss';
+import './input.scss';
 
-class CalendarInput extends React.Component {
+class Input extends React.Component {
     state = {
         selectedDate: null,
         date: null,
@@ -66,4 +66,4 @@ class CalendarInput extends React.Component {
     }
 }
 
-export default CalendarInput;
+export default Input;

@@ -1,16 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { updateDate } from '../../actions';
-import CalendarInput from './CalendarInput';
-import CalendarBody from './Calendar';
+import Input from './Input';
+import Calendar from './Calendar';
 
-class Calendar extends React.Component {
+class CalendarInput extends React.Component {
     state = {
         open: false,
     };
-    constructor(props){
-        super(props);
-    }
     handleIconClick = se => {
         const { open } = this.state;
         this.setState({ open: !open });
@@ -27,14 +24,14 @@ class Calendar extends React.Component {
         const { date } = this.props;
         return (
             <div className="calendar-wrap">
-                <CalendarInput
+                <Input
                     value={ date }
                     onIconClick={ this.handleIconClick }
                     onSelect={ this.handleSelect }
                 />
                 { 
                     open && (
-                        <CalendarBody 
+                        <Calendar 
                             value = { date }
                             onSelect = { this.handleSelect }
                         />
@@ -52,4 +49,4 @@ const mapDispatchToProps = { updateDate };
 export default connect(
     mapStateToProps,
     mapDispatchToProps,
-)(Calendar);
+)(CalendarInput);
