@@ -44,13 +44,15 @@ class Input extends React.Component {
     }
     render() {
         const { date } = this.state;
-        const { onIconClick } = this.props;
+        const { onClick } = this.props;
         return (
-            <div className="calendar-input">
+            <div 
+                className="calendar-input"
+                onClick={ onClick }
+            >
                 <FontAwesome 
                     className="icon" 
                     name="calendar"
-                    onClick={ onIconClick }
                 /> 
                 <input 
                     type="text" 
@@ -58,8 +60,7 @@ class Input extends React.Component {
                     value={ date }
                     pattern="\d{4}-\d{2}-\d{2}"
                     title={ DATE_FMT }
-                    onChange={ this.handleChange }
-                    
+                    onChange={ this.handleChange }      
                 />
             </div>
         );

@@ -10,13 +10,14 @@ class DatePicker extends React.Component {
     state = {
         open: false,
     };
-    handleIconClick = se => {
+    handleInputClick = se => {
         const { open } = this.state;
         this.setState({ open: !open });
     }
     handleSelect = (value) => {
-        const { updateDate } = this.props; 
+        const { updateDate, onSelect } = this.props; 
         updateDate(value);
+        onSelect && onSelect(value);
         this.setState({ open: false });
     }
     render() {
@@ -26,7 +27,7 @@ class DatePicker extends React.Component {
             <div className="date-picker">
                 <Input
                     value={ date }
-                    onIconClick={ this.handleIconClick }
+                    onClick={ this.handleInputClick }
                     onSelect={ this.handleSelect }
                 />
                 <Modal
