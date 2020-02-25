@@ -56,6 +56,7 @@ class Calendar extends React.Component {
     handleItemClick = value => {
         const { onSelect } = this.props;
         const { mode } = this.state;
+        let close = false;
         switch(mode) {
             case MODE.YEAR:
                 this.handleModeChange(MODE.MONTH);
@@ -64,10 +65,11 @@ class Calendar extends React.Component {
                 this.handleModeChange(MODE.DAY);
             break;
             case MODE.DAY:
+                close = true;
             break;
             default:
         }
-        onSelect(value);
+        onSelect(value, close);
     }
     getDaysOfMonth = (month, isLeapYear) => {
         let days = 31;

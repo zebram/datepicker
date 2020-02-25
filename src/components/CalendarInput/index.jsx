@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { updateDate } from '../../actions';
 import Input from './Input';
 import Calendar from './Calendar';
+import moment from 'moment';
 import './calendar-input.scss';
 
 class CalendarInput extends React.Component {
@@ -13,9 +14,10 @@ class CalendarInput extends React.Component {
         const { open } = this.state;
         this.setState({ open: !open });
     }
-    handleSelect = value => {
+    handleSelect = (value, close = false) => {
         const { updateDate } = this.props; 
         updateDate(value);
+        close && this.setState({ open: false });
     }
     render() {
         const { open } = this.state;
