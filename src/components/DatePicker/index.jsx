@@ -3,10 +3,9 @@ import { connect } from 'react-redux';
 import { updateDate } from '../../actions';
 import Input from './Input';
 import Calendar from './Calendar';
-import moment from 'moment';
-import './calendar-input.scss';
+import './date-picker.scss';
 
-class CalendarInput extends React.Component {
+class DatePicker extends React.Component {
     state = {
         open: false,
     };
@@ -23,7 +22,7 @@ class CalendarInput extends React.Component {
         const { open } = this.state;
         const { date } = this.props;
         return (
-            <div className="calendar-wrap">
+            <div className="date-picker">
                 <Input
                     value={ date }
                     onIconClick={ this.handleIconClick }
@@ -55,4 +54,4 @@ const mapDispatchToProps = { updateDate };
 export default connect(
     mapStateToProps,
     mapDispatchToProps,
-)(CalendarInput);
+)(DatePicker);
