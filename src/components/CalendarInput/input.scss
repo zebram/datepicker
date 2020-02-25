@@ -1,7 +1,7 @@
 @import 'variables';
 
 .calendar-input {
-    width: $calendar-input-width;
+    width: 100%;
     border: 1px solid $border-color;
     border-radius: $border-radius;
     text-align: left;
@@ -11,10 +11,27 @@
         cursor: pointer;
     }
     input {
+        font-size: $icon-font-size;
         padding: 5px; 
         border: none;
         &:focus {
             outline: none;
+        }
+    }
+}
+@media (min-width: 576px) {
+    $icon-font-size: 14px;
+    .calendar-input {
+        width: 200px;
+        border: 1px solid $border-color;
+        text-align: left;
+        .icon {
+            font-size: $icon-font-size;
+            padding: $icon-padding;
+        }
+        input {
+            font-size: $icon-font-size;
+            padding: 5px; 
         }
     }
 }

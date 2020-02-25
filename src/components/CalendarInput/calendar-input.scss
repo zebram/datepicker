@@ -1,8 +1,8 @@
 @import 'variables';
 
 .calendar-wrap {
-    width: $calendar-width;
-    margin: 10px auto;
+    position: relative;
+    width: 100%;
 }
 .modal-screen {
     position: absolute;
