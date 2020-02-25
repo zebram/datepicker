@@ -6,8 +6,6 @@ $over-4-col-width: calc(300px / 4);
 $over-7-col-width: calc(300px / 7);
 
 .calendar {
-    position: absolute;
-    z-index: 99;
     width: $calendar-width;
     min-width: $calendar-min-width;
     border: 1px solid $border-color;

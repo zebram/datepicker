@@ -2,7 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { updateDate } from '../../actions';
 import Input from './Input';
-import Calendar from './Calendar';
+import Calendar from '../Calendar';
+import Modal from '../Modal';
 import './date-picker.scss';
 
 class DatePicker extends React.Component {
@@ -13,10 +14,10 @@ class DatePicker extends React.Component {
         const { open } = this.state;
         this.setState({ open: !open });
     }
-    handleSelect = (value, close = false) => {
+    handleSelect = (value) => {
         const { updateDate } = this.props; 
         updateDate(value);
-        close && this.setState({ open: false });
+        this.setState({ open: false });
     }
     render() {
         const { open } = this.state;
@@ -28,20 +29,15 @@ class DatePicker extends React.Component {
                     onIconClick={ this.handleIconClick }
                     onSelect={ this.handleSelect }
                 />
-                { 
-                    open && (
-                        <>
-                            <div 
-                                className="modal-screen"
-                                onClick={ () => this.setState({ open: false })}
-                            ></div>
-                            <Calendar 
-                                value = { date }
-                                onSelect = { this.handleSelect }
-                            />
-                        </>
-                    ) 
-                }
+                <Modal
+                    show={ open }
+                    onClick={ () => this.setState({ open: false })}
+                >
+                    <Calendar 
+                        value = { date }
+                        onSelect = { this.handleSelect }
+                    />
+                </Modal>
             </div>
         )
     }

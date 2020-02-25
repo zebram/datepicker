@@ -25,6 +25,7 @@ class Calendar extends React.Component {
         }
     }
     handlePrevClick = se => {
+        se.stopPropagation();
         const { mode, date } = this.state;
         const mmt = moment(date, DATE_FMT);
         let prevMmt;
@@ -36,6 +37,7 @@ class Calendar extends React.Component {
         });
     }
     handleNextClick = se => {
+        se.stopPropagation();
         const { mode, date } = this.state;
         const mmt = moment(date, DATE_FMT);
         let nextMmt;
@@ -46,30 +48,43 @@ class Calendar extends React.Component {
             date: nextMmt.format(DATE_FMT),
         });
     }
-    handleModeChange = nextMode => {
+    handleModeClick = se => {
+        se.stopPropagation();
+        this.changeMode();
+    }
+    changeMode = nextMode => {
         const { mode } = this.state;
         nextMode === undefined && (nextMode = (mode + 1) % 3);
         this.setState({
             mode: nextMode
         })
     }
-    handleItemClick = value => {
+    handleItemClick = value => se => {
+        se.stopPropagation();
         const { onSelect } = this.props;
         const { mode } = this.state;
-        let close = false;
         switch(mode) {
             case MODE.YEAR:
-                this.handleModeChange(MODE.MONTH);
+                this.changeMode(MODE.MONTH);
+                this.setState({ 
+                    date: value,
+                })
             break;
             case MODE.MONTH:
-                this.handleModeChange(MODE.DAY);
+                this.changeMode(MODE.DAY);
+                this.setState({ 
+                    date: value,
+                })
             break;
             case MODE.DAY:
-                close = true;
+                this.setState({ 
+                    selectedDate: value,
+                    date: value,
+                })
+                onSelect && onSelect(value);
             break;
             default:
         }
-        onSelect(value, close);
     }
     getDaysOfMonth = (month, isLeapYear) => {
         let days = 31;
@@ -98,7 +113,7 @@ class Calendar extends React.Component {
                 />
                 <span 
                     className="icon mode-btn"
-                    onClick={ () => this.handleModeChange() }
+                    onClick={ this.handleModeClick }
                 >
                     { title }
                 </span>
@@ -112,8 +127,8 @@ class Calendar extends React.Component {
     }
     renderYearFace = date => {
         const mmt = moment(date, DATE_FMT);
-        const { value } = this.props;
-        const selectedDate = moment(value);
+        const { selectedDate } = this.state;
+        const selectedMmt = moment(selectedDate);
         const year = mmt.get('year');
         var yearFace = [];
         const min = Math.floor(year/10) * 10 - 1;
@@ -124,14 +139,14 @@ class Calendar extends React.Component {
                 "item": true,
                 "year-item": true,
                 "outside": year === min || year === max,
-                "selected": selectedDate.get('year') === year,
+                "selected": selectedMmt.get('year') === year,
             });
             let value = `${year}-${mmt.format('MM-DD')}`;
             yearFace.push(
                 <div 
                     key={ `year-${year}` }
                     className={ style }
-                    onClick={ () => this.handleItemClick(value) }
+                    onClick={ this.handleItemClick(value) }
                 >
                     { year }
                 </div>
@@ -149,8 +164,8 @@ class Calendar extends React.Component {
     }
     renderMonthFace = date => {
         const mmt = moment(date, DATE_FMT);
-        const { value } = this.props;
-        const selectedDate = moment(value);
+        const { selectedDate } = this.state;
+        const selectedMmt = moment(selectedDate);
         const title = mmt.format('YYYY');
         return (
             <>
@@ -162,14 +177,14 @@ class Calendar extends React.Component {
                                 let style = classNames({
                                     "item": true,
                                     "month-item": true,
-                                    "selected": selectedDate.get('year') === mmt.get('year') && selectedDate.get('month') === MONTH[month],
+                                    "selected": selectedMmt.get('year') === mmt.get('year') && selectedMmt.get('month') === MONTH[month],
                                 });
                                 let value = `${mmt.get('year')}-${MONTH[month] + 1}-${mmt.get('date')}`;
                                 return (
                                     <div 
                                         key={ `month-${month}` }
                                         className={ style }
-                                        onClick={ () => this.handleItemClick(value) }
+                                        onClick={ this.handleItemClick(value) }
                                     >
                                         { month }
                                     </div>
@@ -184,8 +199,8 @@ class Calendar extends React.Component {
     renderDayFace = date => {
         const mmt = moment(date, DATE_FMT);
         var dayFace = [];
-        const { value } = this.props;
-        const selectedDate = moment(value);
+        const { selectedDate } = this.state;
+        const selectedMmt = moment(selectedDate);
         const title = mmt.format('MMM YYYY');
         const aMonthBeforeMmt = mmt.clone().subtract(1, 'month');
         const daysOfCurrMonth = this.getDaysOfMonth(mmt.get('month'), mmt.get('year')%4 === 0);
@@ -213,14 +228,14 @@ class Calendar extends React.Component {
                 "item": true,
                 "day-item": true,
                 "outside": true,
-                "selected": selectedDate.format('YYYY-MM') === aMonthBeforeMmt.format('YYYY-MM') && selectedDate.get('date') === date,
+                "selected": selectedMmt.format('YYYY-MM') === aMonthBeforeMmt.format('YYYY-MM') && selectedMmt.get('date') === date,
             });
             let value = `${aMonthBeforeMmt.format('YYYY-MM')}-${date}`;
             dayFace.push(
                 <div 
                     key={ `prev-month-${date}` } 
                     className={ prevMonthStyle }
-                    onClick={ () => this.handleItemClick(value) }
+                    onClick={ this.handleItemClick(value) }
                 >
                     { date }
                 </div>
@@ -234,14 +249,14 @@ class Calendar extends React.Component {
                 "item": true,
                 "day-item": true,
                 "today": today.format('YYYY-MM') === mmt.format('YYYY-MM') && today.get('date') === date,
-                "selected": selectedDate.format('YYYY-MM') === mmt.format('YYYY-MM') && selectedDate.get('date') === date,
+                "selected": selectedMmt.format('YYYY-MM') === mmt.format('YYYY-MM') && selectedMmt.get('date') === date,
             });
             let value = `${mmt.format('YYYY-MM')}-${date}`;
             dayFace.push(
                 <div 
                     key={ `curr-month-${date}` } 
                     className={ style }
-                    onClick={ () => this.handleItemClick(value) }
+                    onClick={ this.handleItemClick(value) }
                 >
                     { date }
                 </div>
@@ -256,14 +271,14 @@ class Calendar extends React.Component {
                 "item": true,
                 "day-item": true,
                 "outside": true,
-                "selected": selectedDate.format('YYYY-MM') === aMonthAftMmt.format('YYYY-MM') && selectedDate.get('date') === date,
+                "selected": selectedMmt.format('YYYY-MM') === aMonthAftMmt.format('YYYY-MM') && selectedMmt.get('date') === date,
             });
             let value = `${aMonthAftMmt.format('YYYY-MM')}-${date}`;
             dayFace.push(
                 <div 
                     key={ `next-month-${date}` } 
                     className={ nextMonthStyle }
-                    onClick={ () => this.handleItemClick(value) }
+                    onClick={ this.handleItemClick(value) }
                 >
                     { date }
                 </div>
